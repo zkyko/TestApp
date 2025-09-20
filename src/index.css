@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet CSS */
+@import 'leaflet/dist/leaflet.css';
+
+/* Custom map styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
