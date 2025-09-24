@@ -1,10 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy PWA to GitHub Pages
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -34,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Build
+    - name: Build PWA
       run: npm run build
       env:
         VITE_DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}

@@ -1,0 +1,22 @@
+<!-- Simple SVG icon that can be converted to PNG -->
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="32" fill="#2563eb"/>
+  <path d="M96 32C76.1178 32 60 48.1178 60 68C60 87.8822 76.1178 104 96 104C115.882 104 132 87.8822 132 68C132 48.1178 115.882 32 96 32Z" fill="white"/>
+  <path d="M96 72C98.2091 72 100 70.2091 100 68C100 65.7909 98.2091 64 96 64C93.7909 64 92 65.7909 92 68C92 70.2091 93.7909 72 96 72Z" fill="#2563eb"/>
+  <path d="M96 108L64 160H128L96 108Z" fill="white"/>
+  <text x="96" y="140" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#2563eb">TRIP</text>
+</svg>
+
+<!-- To convert this SVG to PNG, you can:
+1. Copy the SVG code
+2. Paste it into an online SVG to PNG converter
+3. Set the size to 192x192 pixels
+4. Download as PNG and replace this file
+-->
+
+<!-- Or use this simple approach:
+1. Open this file in a browser
+2. Take a screenshot
+3. Crop to 192x192 pixels
+4. Save as PNG
+-->
