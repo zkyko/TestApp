@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip App Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-item { margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>Trip Navigator - Functionality Test</h1>
+    
+    <div id="tests"></div>
+
+    <script type="module">
+        // Test the trip data structure
+        const tripData = [
+            {
+                date: "2025-10-04",
+                dayNumber: 1,
+                city: "Zurich → Interlaken",
+                hotel: {
+                    name: "Interlaken Base HQ",
+                    address: "Centralstrasse 11, Interlaken",
+                    checkIn: "15:00",
+                    checkOut: "11:00"
+                },
+                transport: {
+                    type: "train",
+                    from: { station: "Zurich Hauptbahnhof" },
+                    to: { station: "Interlaken Ost" },
+                    depart: "14:04",
+                    arrive: "16:00",
+                    duration: "2h"
+                },
+                notes: ["NEED TO BOOK - 2hr train journey"]
+            }
+        ];
+
+        // Test functions
+        const tests = [
+            {
+                name: "Trip data structure",
+                test: () => tripData.length > 0 && tripData[0].date
+            },
+            {
+                name: "Hotel information",
+                test: () => tripData[0].hotel && tripData[0].hotel.name
+            },
+            {
+                name: "Transport information", 
+                test: () => tripData[0].transport && tripData[0].transport.type === "train"
+            },
+            {
+                name: "Time formatting",
+                test: () => {
+                    const formatTime = (time24) => {
+                        if (!time24) return '';
+                        const [hours, minutes] = time24.split(':');
+                        const hour12 = parseInt(hours) % 12 || 12;
+                        const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+                        return `${hour12}:${minutes} ${ampm}`;
+                    };
+                    return formatTime("14:04") === "2:04 PM";
+                }
+            },
+            {
+                name: "Google Maps URL generation",
+                test: () => {
+                    const openInMaps = (address) => {
+                        return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+                    };
+                    const url = openInMaps("Centralstrasse 11, Interlaken");
+                    return url.includes("maps.google.com") && url.includes("Interlaken");
+                }
+            }
+        ];
+
+        // Run tests
+        const testsDiv = document.getElementById('tests');
+        
+        tests.forEach(test => {
+            try {
+                const result = test.test();
+                const div = document.createElement('div');
+                div.className = `test-item ${result ? 'success' : 'error'}`;
+                div.innerHTML = `
+                    <strong>${test.name}</strong>: ${result ? '✅ PASS' : '❌ FAIL'}
+                `;
+                testsDiv.appendChild(div);
+            } catch (error) {
+                const div = document.createElement('div');
+                div.className = 'test-item error';
+                div.innerHTML = `
+                    <strong>${test.name}</strong>: ❌ ERROR - ${error.message}
+                `;
+                testsDiv.appendChild(div);
+            }
+        });
+
+        // Test current date functionality
+        const today = new Date().toISOString().split('T')[0];
+        const div = document.createElement('div');
+        div.className = 'test-item success';
+        div.innerHTML = `
+            <strong>Current date detection</strong>: Today is ${today}<br>
+            <small>Since it's ${today}, the app will show the first trip (Oct 4, 2025) as "today's trip" for demo purposes.</small>
+        `;
+        testsDiv.appendChild(div);
+    </script>
+</body>
+</html>

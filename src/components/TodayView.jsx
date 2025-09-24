@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Train, Clock, Phone, ExternalLink } from 'lucide-react';
-import { getTodaysTrip } from '../data/tripData';
+import { MapPin, Train, Clock, Phone, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getTodaysTrip, getTripByDay, tripData } from '../data/tripData';
 
 const TodayView = () => {
-  const [currentTrip, setCurrentTrip] = useState(getTodaysTrip());
+  const [currentDay, setCurrentDay] = useState(1);
+  const [currentTrip, setCurrentTrip] = useState(getTripByDay(1));
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -13,6 +14,19 @@ const TodayView = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Update trip when day changes
+  useEffect(() => {
+    setCurrentTrip(getTripByDay(currentDay));
+  }, [currentDay]);
+
+  const navigateDay = (direction) => {
+    if (direction === 'prev' && currentDay > 1) {
+      setCurrentDay(currentDay - 1);
+    } else if (direction === 'next' && currentDay < tripData.length) {
+      setCurrentDay(currentDay + 1);
+    }
+  };
 
   // Convert 24-hour time to 12-hour AM/PM format
   const formatTime = (time24) => {
@@ -64,8 +78,40 @@ const TodayView = () => {
 
   return (
     <div className="h-full bg-gradient-to-b from-blue-50 to-white overflow-y-auto">
-      {/* Header */}
+      {/* Header with Day Navigation */}
       <div className="bg-blue-600 text-white p-4">
+        {/* Day Navigation */}
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={() => navigateDay('prev')}
+            disabled={currentDay === 1}
+            className={`p-2 rounded-full ${
+              currentDay === 1 
+                ? 'text-blue-300 cursor-not-allowed' 
+                : 'text-white hover:bg-blue-700 transition-colors'
+            }`}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          
+          <div className="text-center">
+            <div className="text-sm text-blue-200">Testing Mode - Navigate Days</div>
+            <div className="text-xs text-blue-300">Day {currentDay} of {tripData.length}</div>
+          </div>
+          
+          <button
+            onClick={() => navigateDay('next')}
+            disabled={currentDay === tripData.length}
+            className={`p-2 rounded-full ${
+              currentDay === tripData.length 
+                ? 'text-blue-300 cursor-not-allowed' 
+                : 'text-white hover:bg-blue-700 transition-colors'
+            }`}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
         <div className="text-center">
           <h1 className="text-xl font-bold mb-1">Today's Journey</h1>
           <p className="text-blue-100 text-sm">
@@ -84,61 +130,71 @@ const TodayView = () => {
 
       <div className="p-4 space-y-4">
         {/* Next Train Card */}
-        <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Train className="w-5 h-5 text-green-600" />
-              <h2 className="font-semibold text-gray-900">Next Train</h2>
-            </div>
-            {timeUntilDeparture && (
-              <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                timeUntilDeparture === 'Departed' 
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-green-100 text-green-700'
-              }`}>
-                {timeUntilDeparture === 'Departed' ? 'Departed' : `Leaves in ${timeUntilDeparture}`}
+        {currentTrip.transport ? (
+          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Train className="w-5 h-5 text-green-600" />
+                <h2 className="font-semibold text-gray-900">Next Train</h2>
               </div>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium text-gray-900">{currentTrip.transport.from.station}</p>
-                <p className="text-sm text-gray-600">Platform {currentTrip.transport.from.platform}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-lg text-blue-600">{formatTime(currentTrip.transport.depart)}</p>
-                <p className="text-sm text-gray-600">{currentTrip.transport.duration}</p>
-              </div>
-            </div>
-            
-            <div className="border-l-2 border-gray-200 ml-2 pl-4 py-2">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Clock className="w-4 h-4" />
-                <span>Arrives {formatTime(currentTrip.transport.arrive)} at {currentTrip.transport.to.station}</span>
-              </div>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={() => openInMaps(currentTrip.transport.from.address)}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-              >
-                Get to Station
-              </button>
-              {currentTrip.transport.ticketLink && (
-                <button
-                  onClick={() => window.open(currentTrip.transport.ticketLink, '_blank')}
-                  className="flex items-center gap-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Ticket
-                </button>
+              {timeUntilDeparture && (
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  timeUntilDeparture === 'Departed' 
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-green-100 text-green-700'
+                }`}>
+                  {timeUntilDeparture === 'Departed' ? 'Departed' : `Leaves in ${timeUntilDeparture}`}
+                </div>
               )}
             </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium text-gray-900">{currentTrip.transport.from.station}</p>
+                  <p className="text-sm text-gray-600">Platform {currentTrip.transport.from.platform || 'TBD'}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-lg text-blue-600">{formatTime(currentTrip.transport.depart)}</p>
+                  <p className="text-sm text-gray-600">{currentTrip.transport.duration}</p>
+                </div>
+              </div>
+              
+              <div className="border-l-2 border-gray-200 ml-2 pl-4 py-2">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Clock className="w-4 h-4" />
+                  <span>Arrives {formatTime(currentTrip.transport.arrive)} at {currentTrip.transport.to.station}</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => openInMaps(currentTrip.transport.from.address)}
+                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Get to Station
+                </button>
+                {currentTrip.transport.ticketLink && (
+                  <button
+                    onClick={() => window.open(currentTrip.transport.ticketLink, '_blank')}
+                    className="flex items-center gap-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Ticket
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-gray-300">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="w-5 h-5 text-gray-600" />
+              <h2 className="font-semibold text-gray-900">No Train Today</h2>
+            </div>
+            <p className="text-sm text-gray-600">Exploring the city today - no scheduled trains.</p>
+          </div>
+        )}
 
         {/* Hotel Card */}
         <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-purple-500">
@@ -188,6 +244,31 @@ const TodayView = () => {
           </div>
         </div>
 
+        {/* Transfer Details (if applicable) */}
+        {currentTrip.transport?.transfer && (
+          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
+            <div className="flex items-center gap-2 mb-3">
+              <Train className="w-5 h-5 text-blue-600" />
+              <h2 className="font-semibold text-gray-900">Transfer Opportunity</h2>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-700">
+                <strong>{currentTrip.transport.transfer.station}</strong>
+              </p>
+              <p className="text-xs text-gray-600">
+                Arrive: {formatTime(currentTrip.transport.transfer.arriveAt)} • 
+                Depart: {formatTime(currentTrip.transport.transfer.departAt)} • 
+                {currentTrip.transport.transfer.layoverDuration} layover
+              </p>
+              {currentTrip.transport.transfer.canExplore && (
+                <div className="bg-blue-50 p-2 rounded text-xs text-blue-700">
+                  ✨ Explore! You have ~{currentTrip.transport.transfer.explorationTime} to walk around the Old Town.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Notes Card */}
         {currentTrip.notes && currentTrip.notes.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500">
@@ -200,21 +281,6 @@ const TodayView = () => {
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {/* Last Train Warning (if applicable) */}
-        {currentTrip.lastTrain && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Train className="w-5 h-5 text-red-600" />
-              <h2 className="font-semibold text-red-900">Last Train Warning</h2>
-            </div>
-            <p className="text-sm text-red-700">
-              Last train from {currentTrip.lastTrain.from} to {currentTrip.lastTrain.to}: 
-              <span className="font-bold"> {formatTime(currentTrip.lastTrain.depart)}</span>
-              {currentTrip.lastTrain.platform && ` (Platform ${currentTrip.lastTrain.platform})`}
-            </p>
           </div>
         )}
       </div>
