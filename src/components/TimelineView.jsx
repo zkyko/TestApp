@@ -1,8 +1,32 @@
-import React from 'react';
-import { Calendar, MapPin, Train, Plane, Clock, ExternalLink, Phone, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, MapPin, Train, Plane, Clock, ExternalLink, Phone, AlertCircle, Ticket } from 'lucide-react';
 import { tripData } from '../data/tripData';
+import { getAllTicketsForDay } from '../data/ticketMappings';
+import EnhancedActivityDetails from './EnhancedActivityDetails.jsx';
+import TicketViewer from './TicketViewer.jsx';
 
 const TimelineView = () => {
+  const [expandedDays, setExpandedDays] = useState({});
+  const [ticketViewerOpen, setTicketViewerOpen] = useState(false);
+  const [selectedTicketDay, setSelectedTicketDay] = useState(null);
+
+  const openTicketViewer = (dayNumber, journeyLabel) => {
+    const tickets = getAllTicketsForDay(dayNumber);
+    if (tickets && tickets.length > 0) {
+      setSelectedTicketDay(dayNumber);
+      setTicketViewerOpen(true);
+    } else {
+      console.log(`No tickets available for day ${dayNumber}: ${journeyLabel}`);
+    }
+  };
+
+  const toggleDayExpansion = (dayNumber) => {
+    setExpandedDays(prev => ({
+      ...prev,
+      [dayNumber]: !prev[dayNumber]
+    }));
+  };
+
   // Convert 24-hour time to 12-hour AM/PM format
   const formatTime = (time24) => {
     if (!time24) return '';
@@ -14,16 +38,6 @@ const TimelineView = () => {
 
   return (
     <div className="h-full bg-gray-50 overflow-y-auto">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-4">
-        <div className="flex items-center justify-center gap-2">
-          <Calendar className="w-6 h-6" />
-          <h1 className="text-xl font-semibold">Trip Timeline</h1>
-        </div>
-        <p className="text-center text-blue-100 text-sm mt-1">
-          15 days • Oct 4-18, 2025 • Europe Adventure
-        </p>
-      </div>
 
       {/* Timeline List with Vertical Line */}
       <div className="relative p-4">
@@ -127,23 +141,18 @@ const TimelineView = () => {
                       )}
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Flight Information */}
-              {trip.flight && (
-                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                  <div className="flex items-start gap-2">
-                    <Plane className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <div className="font-semibold text-blue-900">Flight Departure</div>
-                      <div className="text-sm text-blue-700">
-                        Departure: {formatTime(trip.flight.departure)}
-                      </div>
-                      {trip.flight.airline && (
-                        <div className="text-xs text-blue-600">{trip.flight.airline}</div>
-                      )}
-                    </div>
+                  
+                  {/* Transport Actions */}
+                  <div className="flex gap-2 mt-2">
+                    {getAllTicketsForDay(trip.dayNumber).length > 0 && (
+                      <button
+                        onClick={() => openTicketViewer(trip.dayNumber, trip.city)}
+                        className="flex items-center gap-1 bg-green-600 text-white text-xs py-1 px-2 rounded hover:bg-green-700 transition-colors"
+                      >
+                        <Ticket className="w-3 h-3" />
+                        View Tickets
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -169,59 +178,16 @@ const TimelineView = () => {
                 </div>
               )}
 
-              {/* Detailed Schedule for Special Days */}
-              {trip.detailedSchedule && (
-                <div className="mt-4">
-                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">Detailed Schedule</h4>
-                  <div className="space-y-1">
-                    {trip.detailedSchedule.map((item, idx) => (
-                      <div key={idx} className="text-xs text-gray-600 flex">
-                        <span className="font-medium text-blue-600 w-16 flex-shrink-0">{formatTime(item.time)}</span>
-                        <span>{item.activity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Optimized Route for Rome */}
-              {trip.optimizedRoute && (
-                <div className="mt-4">
-                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">Optimized Route</h4>
-                  <div className="space-y-1">
-                    {trip.optimizedRoute.map((item, idx) => (
-                      <div key={idx} className="text-xs text-gray-600 flex">
-                        <span className="font-medium text-green-600 w-20 flex-shrink-0">{item.time}</span>
-                        <span>{item.activity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Must-Do Activities */}
-              {(trip.milanMustDo || trip.florenceMustDo || trip.veniceMustDo || trip.salzburgMustDo || trip.munichMustDo || trip.munichDayTrips) && (
-                <div className="mt-4">
-                  <h4 className="font-semibold text-gray-900 mb-2 text-sm">Must-Do Activities</h4>
-                  <div className="space-y-1">
-                    {(trip.milanMustDo || trip.florenceMustDo || trip.veniceMustDo || trip.salzburgMustDo || trip.munichMustDo || trip.munichDayTrips || []).slice(0, 3).map((activity, idx) => (
-                      <div key={idx} className="text-xs text-gray-600 flex items-start gap-2">
-                        <div className="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>{activity}</span>
-                      </div>
-                    ))}
-                    {(trip.milanMustDo || trip.florenceMustDo || trip.veniceMustDo || trip.salzburgMustDo || trip.munichMustDo || trip.munichDayTrips || []).length > 3 && (
-                      <div className="text-xs text-gray-500">
-                        +{(trip.milanMustDo || trip.florenceMustDo || trip.veniceMustDo || trip.salzburgMustDo || trip.munichMustDo || trip.munichDayTrips || []).length - 3} more activities
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Enhanced Activity Details */}
+              <EnhancedActivityDetails 
+                dayNumber={trip.dayNumber}
+                isOpen={expandedDays[trip.dayNumber]}
+                onToggle={() => toggleDayExpansion(trip.dayNumber)}
+              />
 
               {/* Important Notes */}
               {trip.notes && trip.notes.length > 0 && (
-                <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+                <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-100">
                   <div className="flex items-start gap-2 mb-2">
                     <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
@@ -237,19 +203,20 @@ const TimelineView = () => {
                   </div>
                 </div>
               )}
-
-              {/* Last Train Warning */}
-              {trip.lastTrain && (
-                <div className="mt-3 p-2 bg-red-50 rounded border border-red-100">
-                  <div className="text-xs text-red-700">
-                    ⚠️ Last train: {trip.lastTrain.from} → {trip.lastTrain.to} at {formatTime(trip.lastTrain.depart)}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Ticket Viewer Modal */}
+      <TicketViewer 
+        dayNumber={selectedTicketDay}
+        isOpen={ticketViewerOpen}
+        onClose={() => {
+          setTicketViewerOpen(false);
+          setSelectedTicketDay(null);
+        }}
+      />
     </div>
   );
 };

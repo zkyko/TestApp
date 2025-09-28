@@ -1,0 +1,9 @@
+# Icon placeholders created
+
+The apple-touch-icon.png has been moved to the correct location.
+
+For a complete PWA setup, you would also need:
+- icon-192.png (192x192 pixels)
+- icon-512.png (512x512 pixels)
+
+These can be generated from your apple-touch-icon.png using image editing software or online tools.

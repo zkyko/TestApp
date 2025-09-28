@@ -405,20 +405,20 @@ export const tripData = [
         station: "Innsbruck Hbf",
         address: "Südtiroler Platz 7, 6020 Innsbruck",
         coords: [47.2631, 11.4008],
-        arriveAt: "16:36",
-        departAt: "18:25",
-        layoverDuration: "1h 49m",
+        arriveAt: "16:26",
+        departAt: "18:26",
+        layoverDuration: "2h",
         canExplore: true,
-        explorationTime: "1h 30m"
+        explorationTime: "1h 45m"
       }
     },
     notes: [
       "BOOKED — ÖBB Railjet + WESTbahn",
-      "🚂 TRANSFER OPPORTUNITY: 1h 49m layover in Innsbruck (16:36-18:25)",
-      "✨ Explore Innsbruck! You have ~1h 30m to see the colorful Old Town",
+      "🚂 TRANSFER OPPORTUNITY: 2h layover in Innsbruck (16:26-18:26)",
+      "✨ Explore Innsbruck! You have ~1h 45m to see the colorful Old Town",
       "📍 Innsbruck Old Town is 10-min walk from station - perfect for a quick explore!",
       "🏔️ Amazing Alpine views from the station area",
-      "⚠️ Be back at platform by 18:15 for your 18:25 connection to Salzburg",
+      "⚠️ Be back at platform by 18:15 for your 18:26 connection to Salzburg",
       "Hotel is 15-20 min flat walk from Salzburg station, or 7 min taxi"
     ],
     attractions: [
@@ -428,7 +428,7 @@ export const tripData = [
         coords: [47.2692, 11.3933],
         transferOpportunity: true,
         walkFromStation: "10 minutes",
-        explorationTime: "1h 30m available"
+        explorationTime: "1h 45m available"
       },
       {
         name: "Mozart's Birthplace (Evening Arrival)",

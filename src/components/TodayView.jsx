@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Train, Clock, Phone, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, Train, Clock, Phone, ExternalLink, ChevronLeft, ChevronRight, Ticket } from 'lucide-react';
 import { getTodaysTrip, getTripByDay, tripData } from '../data/tripData';
+import { getAllTicketsForDay } from '../data/ticketMappings';
+import EnhancedActivityDetails from './EnhancedActivityDetails.jsx';
+import TicketViewer from './TicketViewer.jsx';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const TodayView = () => {
   const [currentDay, setCurrentDay] = useState(1);
   const [currentTrip, setCurrentTrip] = useState(getTripByDay(1));
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [activityDetailsOpen, setActivityDetailsOpen] = useState(false);
+  const [ticketViewerOpen, setTicketViewerOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
-
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const handlePrevDay = () => {
+    const newDay = Math.max(1, currentDay - 1);
+    setCurrentDay(newDay);
+    setCurrentTrip(getTripByDay(newDay));
+  };
+
+  const handleNextDay = () => {
+    const newDay = Math.min(tripData.length, currentDay + 1);
+    setCurrentDay(newDay);
+    setCurrentTrip(getTripByDay(newDay));
+  };
 
   // Update trip when day changes
   useEffect(() => {
@@ -69,6 +86,15 @@ const TodayView = () => {
     }
   };
 
+  const openTicketViewer = () => {
+    const tickets = getAllTicketsForDay(currentDay);
+    if (tickets && tickets.length > 0) {
+      setTicketViewerOpen(true);
+    } else {
+      console.log('No tickets available for this day');
+    }
+  };
+
   const openInMaps = (address) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
     window.open(url, '_blank');
@@ -77,54 +103,27 @@ const TodayView = () => {
   const timeUntilDeparture = calculateTimeUntilDeparture();
 
   return (
-    <div className="h-full bg-gradient-to-b from-blue-50 to-white overflow-y-auto">
-      {/* Header with Day Navigation */}
-      <div className="bg-blue-600 text-white p-4">
-        {/* Day Navigation */}
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => navigateDay('prev')}
-            disabled={currentDay === 1}
-            className={`p-2 rounded-full ${
-              currentDay === 1 
-                ? 'text-blue-300 cursor-not-allowed' 
-                : 'text-white hover:bg-blue-700 transition-colors'
-            }`}
+    <div className="h-full bg-gray-100">
+      {/* Day Navigation Header */}
+      <div className="bg-white p-4 shadow-md">
+        <div className="flex items-center justify-between">
+          <button 
+            onClick={handlePrevDay}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
-          
           <div className="text-center">
-            <div className="text-sm text-blue-200">Testing Mode - Navigate Days</div>
-            <div className="text-xs text-blue-300">Day {currentDay} of {tripData.length}</div>
+            <h1 className="text-xl font-bold text-gray-900">Day {currentDay}</h1>
+            <p className="text-sm text-gray-600">{currentTrip.city}</p>
+            <p className="text-xs text-gray-500 mt-1">Austin, TX: {formatInTimeZone(currentTime, 'America/Chicago', 'hh:mm:ss a')}</p>
           </div>
-          
-          <button
-            onClick={() => navigateDay('next')}
-            disabled={currentDay === tripData.length}
-            className={`p-2 rounded-full ${
-              currentDay === tripData.length 
-                ? 'text-blue-300 cursor-not-allowed' 
-                : 'text-white hover:bg-blue-700 transition-colors'
-            }`}
+          <button 
+            onClick={handleNextDay}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
-        </div>
-
-        <div className="text-center">
-          <h1 className="text-xl font-bold mb-1">Today's Journey</h1>
-          <p className="text-blue-100 text-sm">
-            Day {currentTrip.dayNumber} • {new Date(currentTrip.date).toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
-          <p className="text-lg font-semibold mt-2">{currentTrip.city}</p>
-          <div className="mt-2 text-xs text-blue-200">
-            Austin, TX: {getAustinTime()}
-          </div>
         </div>
       </div>
 
@@ -174,13 +173,22 @@ const TodayView = () => {
                 >
                   Get to Station
                 </button>
+                {getAllTicketsForDay(currentDay).length > 0 && (
+                  <button
+                    onClick={openTicketViewer}
+                    className="flex items-center gap-1 bg-green-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
+                  >
+                    <Ticket className="w-4 h-4" />
+                    View Tickets
+                  </button>
+                )}
                 {currentTrip.transport.ticketLink && (
                   <button
                     onClick={() => window.open(currentTrip.transport.ticketLink, '_blank')}
                     className="flex items-center gap-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    Ticket
+                    Book
                   </button>
                 )}
               </div>
@@ -283,7 +291,21 @@ const TodayView = () => {
             </ul>
           </div>
         )}
+
+        {/* Enhanced Activity Details */}
+        <EnhancedActivityDetails 
+          dayNumber={currentDay}
+          isOpen={activityDetailsOpen}
+          onToggle={() => setActivityDetailsOpen(!activityDetailsOpen)}
+        />
       </div>
+
+      {/* Ticket Viewer Modal */}
+      <TicketViewer 
+        dayNumber={currentDay}
+        isOpen={ticketViewerOpen}
+        onClose={() => setTicketViewerOpen(false)}
+      />
     </div>
   );
 };
