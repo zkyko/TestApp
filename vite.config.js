@@ -6,7 +6,15 @@ export default defineConfig({
   plugins: [react()],
   base: '/TestApp/',
   server: {
+    host: true,
     port: 3000,
-    open: true
-  }
+    open: true,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      clientPort: 3000,
+      path: '/TestApp/'
+    }
+  },
+  preview: { port: 3000 }
 })

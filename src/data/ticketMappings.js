@@ -4,11 +4,11 @@ export const ticketMappings = {
   // Day 3: Zurich → Interlaken (Oct 6, 2025)
   "day-3-zurich-interlaken": {
     aastha: {
-      image: "/assets/tickets/IMG_0708.PNG",
+      image: "assets/tickets/IMG_0708.PNG",
       passenger: "Aastha Acharya"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0707.PNG", 
+      image: "assets/tickets/IMG_0707.PNG", 
       passenger: "Yubaraj Acharya"
     },
     details: {
@@ -23,11 +23,11 @@ export const ticketMappings = {
   // Day 4: Interlaken → Lauterbrunnen (Oct 7, 2025)
   "day-4-interlaken-lauterbrunnen": {
     aastha: {
-      image: "/assets/tickets/IMG_0710.PNG",
+      image: "assets/tickets/IMG_0710.PNG",
       passenger: "Aastha Acharya"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0709.PNG",
+      image: "assets/tickets/IMG_0709.PNG",
       passenger: "Yubaraj Acharya"
     },
     details: {
@@ -41,13 +41,13 @@ export const ticketMappings = {
   // Day 5: Milan → Florence (Oct 8, 2025) - Italo Train 8143
   "day-5-milan-florence": {
     aastha: {
-      image: "/assets/tickets/IMG_0714.PNG",
+      image: "assets/tickets/IMG_0714.PNG",
       passenger: "Aastha Acharya",
       seat: "Coach 5, Seat 12",
       reference: "AHD53K"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0715.PNG",
+      image: "assets/tickets/IMG_0715.PNG",
       passenger: "Yubaraj Acharya", 
       seat: "Coach 5, Seat 11",
       reference: "AHD53K"
@@ -66,13 +66,13 @@ export const ticketMappings = {
   // Day 6: Florence → Rome (Oct 9, 2025) - Italo Train 9907
   "day-6-florence-rome": {
     aastha: {
-      image: "/assets/tickets/IMG_0719.PNG",
+      image: "assets/tickets/IMG_0719.PNG",
       passenger: "Aastha Acharya",
       seat: "Coach 4, Seat 24", 
       reference: "CBSGPP"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0718.PNG",
+      image: "assets/tickets/IMG_0718.PNG",
       passenger: "Yubaraj Acharya",
       seat: "Coach 4, Seat 23",
       reference: "CBSGPP"
@@ -91,13 +91,13 @@ export const ticketMappings = {
   // Day 7: Rome → Florence (Oct 10, 2025) - Italo Train 9962
   "day-7-rome-florence": {
     aastha: {
-      image: "/assets/tickets/IMG_0717.PNG",
+      image: "assets/tickets/IMG_0717.PNG",
       passenger: "Aastha Acharya",
       seat: "Coach 9, Seat 20",
       reference: "MC1Z9P"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0716.PNG", 
+      image: "assets/tickets/IMG_0716.PNG", 
       passenger: "Yubaraj Acharya",
       seat: "Coach 9, Seat 19",
       reference: "MC1Z9P"
@@ -116,13 +116,13 @@ export const ticketMappings = {
   // Day 8: Florence → Venice (Oct 11, 2025) - Italo Train 8914
   "day-8-florence-venice": {
     aastha: {
-      image: "/assets/tickets/IMG_0721.PNG",
+      image: "assets/tickets/IMG_0721.PNG",
       passenger: "Aastha Acharya",
       seat: "Coach 6, Seat 28",
       reference: "OITY4S"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0720.PNG",
+      image: "assets/tickets/IMG_0720.PNG",
       passenger: "Yubaraj Acharya", 
       seat: "Coach 6, Seat 27",
       reference: "OITY4S"
@@ -141,11 +141,11 @@ export const ticketMappings = {
   // Day 10: Venice → Innsbruck (Oct 12, 2025) - EuroCity
   "day-10-venice-innsbruck": {
     aastha: {
-      image: "/assets/tickets/IMG_0713.PNG",
+      image: "assets/tickets/IMG_0713.PNG",
       passenger: "Aastha Acharya"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0711.PNG",
+      image: "assets/tickets/IMG_0711.PNG",
       passenger: "Yubaraj Acharya"
     },
     details: {
@@ -162,12 +162,12 @@ export const ticketMappings = {
   // Day 11: Innsbruck → Salzburg (Oct 13, 2025) - Westbahn Train 979
   "day-11-innsbruck-salzburg": {
     aastha: {
-      image: "/assets/tickets/IMG_0723.PNG",
+      image: "assets/tickets/IMG_0723.PNG",
       ticketCode: "PZ7-6WT",
       price: "€13.99"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0722.PNG",
+      image: "assets/tickets/IMG_0722.PNG",
       ticketCode: "WBA-UH8", 
       price: "€13.99"
     },
@@ -185,11 +185,11 @@ export const ticketMappings = {
   // Day 12: Salzburg → Munich (Oct 14, 2025)
   "day-12-salzburg-munich": {
     aastha: {
-      image: "/assets/tickets/IMG_1879.PNG",
+      image: "assets/tickets/IMG_1879.PNG",
       passenger: "Aastha Acharya"
     },
     yubaraj: {
-      image: "/assets/tickets/IMG_0724.PNG", 
+      image: "assets/tickets/IMG_0724.PNG", 
       passenger: "Yubaraj Acharya"
     },
     details: {
@@ -203,7 +203,7 @@ export const ticketMappings = {
   // Day 15: Munich → Zurich (Oct 18, 2025) - Final return leg
   "day-15-munich-zurich": {
     both: {
-      image: "/assets/tickets/IMG_1880.PNG",
+      image: "assets/tickets/IMG_1880.PNG",
       passengers: "Both tickets shown separately (return)"
     },
     details: {
