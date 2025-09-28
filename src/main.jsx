@@ -10,6 +10,7 @@ root.render(
   </React.StrictMode>
 );
 
+/*
 // Register Service Worker for PWA functionality - only in production
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
@@ -22,3 +23,4 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
       });
   });
 }
+*/
