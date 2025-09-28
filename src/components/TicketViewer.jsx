@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, User, Users, Train, Clock, MapPin } from 'lucide-react';
 import { getPassengerTicket, getTicketsForDay } from '../data/ticketMappings';
-import { getBasePath } from '../utils/path';
 
 const TicketViewer = ({ dayNumber, isOpen, onClose }) => {
   const [selectedPassenger, setSelectedPassenger] = useState('aastha');
@@ -145,7 +144,7 @@ const TicketViewer = ({ dayNumber, isOpen, onClose }) => {
             {/* Ticket Image */}
             <div className="bg-gray-100 rounded-lg p-2 text-center">
               <img
-                src={`${getBasePath()}${currentTicket.image}`}
+                src={`${import.meta.env.BASE_URL}${currentTicket.image}`}
                 alt={`Ticket for ${currentTicket.passenger || 'passengers'}`}
                 className="max-w-full h-auto rounded shadow-md mx-auto"
                 style={{ maxHeight: '400px' }}
